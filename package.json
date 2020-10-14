@@ -1,0 +1,23 @@
+{
+  "name": "battleship.ts",
+  "version": "0.1.0",
+  "description": "Console version of the classic game Battleship",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Ryker Rumsey",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.2.13",
+    "@types/jest": "^26.0.14",
+    "@types/mocha": "^8.0.3",
+    "chai": "^4.2.0",
+    "jest": "^26.5.3",
+    "mocha": "^8.1.3",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3"
+  }
+}
