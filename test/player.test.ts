@@ -8,7 +8,7 @@ describe("Player Class", () => {
         player = new Player(1, "BLUE", "USA")
     })
 
-    test("should initialize player 1 as USA", () => {
+    test("should initialize Player 1 as USA with the color BLUE", () => {
         expect(player.id).toBe(1)
         expect(player.color).toBe("BLUE")
         expect(player.country_name).toBe("USA")
