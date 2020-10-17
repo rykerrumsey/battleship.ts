@@ -4,11 +4,13 @@
   "description": "Console version of the classic game Battleship",
   "main": "index.ts",
   "scripts": {
+    "start": "tsc && node ./build/index.js", 
     "test": "jest"
   },
   "author": "Ryker Rumsey",
   "license": "MIT",
   "devDependencies": {
+    "@types/blessed": "^-2.1.17",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.8",
     "jest": "^26.5.3",
