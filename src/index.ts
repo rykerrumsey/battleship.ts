@@ -38,14 +38,15 @@ let game_screen = blessed.box({
     padding: {
         left: 2,
         right: 2,
-        top: 2,
-        bottom: 2
+        top: 1,
+        bottom: 1
     },
     style: default_style
 })
 
 // board_component
 let board = blessed.box({
+    parent: game_screen,
     width: 16,
     height: 8,
     clickable: true,
@@ -53,44 +54,47 @@ let board = blessed.box({
         fg: "blue",
         bg: "blue",
     },
-    top: 0,
-    left: 0,
+    top: "center",
+    left: "center",
     shadow: true
 })
 
-screen.append(board)
-
-    let ship = blessed.box({
-        width: 3,
-        height: 1,
-        style: {
-            bg: "black"
-        }
-    })
+let ship = blessed.box({
+    parent: board,
+    width: 3,
+    height: 1,
+    hidden: true,
+    style: {
+        bg: "black"
+    }
+})
 
 let orientation = Orientation.Horizontal
 
 board.on("mousemove", (data) => {
     board.children = []
-    ship.top = data.y
-    ship.left = data.x
+
+    ship.top = data.y - Number(board.atop)
+    ship.left = data.x - Number(board.aleft)
 
     if(orientation === Orientation.Horizontal) {
-        if(data.x < Number(board.width)-2) {
+        if(ship.left < Number(board.width) - 2) {
             board.append(ship)
         } else {
             ship.left = Number(board.width) - 3
             board.append(ship)
         }
     } else {
-        if(data.y < Number(board.height)-2){
+        if(ship.top < Number(board.height) - 2){
             board.append(ship)
         } else {
             ship.top = Number(board.height) - 3
             board.append(ship)
         }
     }
-    
+
+    ship.hidden = false
+
     screen.render()
 })
 
