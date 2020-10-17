@@ -1,10 +1,14 @@
 import fs from "fs"
 import * as blessed from "blessed"
 import { Player } from "./player"
+import { Orientation } from "./types"
 
 let default_style = {
     bg: "white",
-    fg: "black"
+    fg: "black",
+    border: {
+        bg: "white"
+    }
 }
 
 let inverse_default_style = {
@@ -40,11 +44,71 @@ let game_screen = blessed.box({
     style: default_style
 })
 
+// board_component
+let board = blessed.box({
+    width: 16,
+    height: 8,
+    clickable: true,
+    style: {
+        fg: "blue",
+        bg: "blue",
+    },
+    top: 0,
+    left: 0,
+    shadow: true
+})
+
+screen.append(board)
+
+    let ship = blessed.box({
+        width: 3,
+        height: 1,
+        style: {
+            bg: "black"
+        }
+    })
+
+let orientation = Orientation.Horizontal
+
+board.on("mousemove", (data) => {
+    board.children = []
+    ship.top = data.y
+    ship.left = data.x
+
+    if(orientation === Orientation.Horizontal) {
+        if(data.x < Number(board.width)-2) {
+            board.append(ship)
+        } else {
+            ship.left = Number(board.width) - 3
+            board.append(ship)
+        }
+    } else {
+        if(data.y < Number(board.height)-2){
+            board.append(ship)
+        } else {
+            ship.top = Number(board.height) - 3
+            board.append(ship)
+        }
+    }
+    
+    screen.render()
+})
+
+board.on("click", (data) => {
+    console.log(data)
+})
+
+board.on("mouseout", (data) => {
+        board.children = []
+        screen.render()
+})
+
 //countdown_message
 let countdown_message = blessed.box({
     parent:game_screen,
     width: 40,
     height: 5,
+    hidden: true,
     content: "",
     border: "line",
     top: "center",
