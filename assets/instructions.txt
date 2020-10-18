@@ -1,0 +1,10 @@
+USSR is attacking...
+
+It's time to position our fleet and prepare
+to engage the enemy!
+
+Instructions:
+
+Left Mouse Button -> Place your ship
+Middle Mouse Button -> Orientate your ship vertical or horizontal
+    

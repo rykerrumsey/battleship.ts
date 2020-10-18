@@ -98,8 +98,31 @@ board.on("mousemove", (data) => {
     screen.render()
 })
 
+const toggle_orientation = (): void => {
+    switch(orientation) {
+        case Orientation.Vertical:
+            orientation = Orientation.Horizontal
+            ship.width = 3
+            ship.height = 1
+            break
+        case Orientation.Horizontal:
+            orientation = Orientation.Vertical
+            ship.width = 1
+            ship.height = 3
+            break
+        default:
+            return        
+    }
+
+    screen.render()
+}
+
 board.on("click", (data) => {
-    console.log(data)
+    if(data.button === "middle")
+        toggle_orientation()
+    else
+        console.log(data)
+    
 })
 
 board.on("mouseout", (data) => {
