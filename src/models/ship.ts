@@ -1,5 +1,5 @@
 import * as blessed from "blessed"
-import { Coordinates, ShipType, Orientation, Dimensions } from "./types"
+import { Coordinates, ShipType, Orientation, Dimensions } from "../types"
 
 export default class Ship {
     name: string

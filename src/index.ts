@@ -1,9 +1,9 @@
 import fs from "fs"
 import * as blessed from "blessed"
-import { Player } from "./player"
-import { Color, Orientation, ShipType } from "./types"
-import Board from "./board"
-import Ship from "./ship"
+import { Player } from "./models/player"
+import { Color, ShipType } from "./types"
+import Board from "./models/board"
+import Ship from "./models/ship"
 
 let default_style = {
     bg: "white",
@@ -18,7 +18,7 @@ let inverse_default_style = {
     bg: "black"
 }
 
-export const screen = blessed.screen({
+const screen = blessed.screen({
     smartCSR: true,
     autoPadding: true
 })
@@ -47,11 +47,20 @@ let game_screen = blessed.box({
 })
 
 // board_component
-let cruiser_ship = new Ship(ShipType.Cruiser)
+let ships_availible: Ship[] = [
+    new Ship(ShipType.Cruiser),
+    new Ship(ShipType.Carrier),
+    new Ship(ShipType.Submarine),
+    new Ship(ShipType.Destroyer),
+    new Ship(ShipType.Battleship)
+]
+
+
+
 let board_element = new Board(Color.Blue, {width: 16, height: 8}, game_screen)
 
 board_element.position_coordinate = {x: "center", y: "center"}
-board_element.place_ship(cruiser_ship, screen)
+board_element.place_ship(ships_availible[0], screen)
 
 //countdown_message
 let countdown_message = blessed.box({
@@ -67,7 +76,8 @@ let countdown_message = blessed.box({
     style: default_style
 })
 
-let player2 = new Player(2, "red", "USSR")
+const player1 = new Player(1, Color.Blue, "USA")
+const player2 = new Player(2, Color.Red, "USSR")
 
 const show_countdown_message = (player: Player) => {
     const message = `Close your eyes Player ${player.id} ...`

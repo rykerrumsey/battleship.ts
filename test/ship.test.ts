@@ -1,4 +1,4 @@
-import Ship from "../src/ship"
+import Ship from "../src/models/ship"
 import { Coordinates, Orientation, ShipType } from "../src/types"
 
 
@@ -22,6 +22,11 @@ describe("Ship Class", () => {
         expect(ship2.name).toBe("Cruiser")
         expect(ship2.ship_type).toBe(3)
         expect(ship2.is_sunk).toBeFalsy()
+    })
+
+    test("should toogle the orientaion of the ship", () => {
+        ship1.toggle_orientation()
+        expect(ship1._orientation).toBe(Orientation.Horizontal)
     })
 
     test("calculate ship section coordinates based off of lead ship coordinate", () => {

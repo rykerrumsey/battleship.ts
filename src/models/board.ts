@@ -1,6 +1,6 @@
 import * as blessed from "blessed"
 
-import { Color, Coordinates, Dimensions, ShipType } from "./types";
+import { Color, Coordinates, Dimensions } from "../types";
 import Ship from "./ship"
 
 export default class Board {

@@ -1,12 +1,11 @@
 import * as blessed from "blessed"
 import { Color, Coordinates, Dimensions } from "../src/types"
-import Board from "../src/board"
-import { screen } from "../src/index"
+import Board from "../src/models/board"
 
 describe("Board Class", () => {
     const screen = blessed.screen({})
     const parent = blessed.box({parent: screen})
-    
+
     let board: Board
 
     beforeEach(() => {
