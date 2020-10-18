@@ -1,8 +1,8 @@
-import { Coords } from "./types"
+import { Coordinates } from "./types"
 
 export class Player {
     number_of_shots_taken: number = 0
-    coords_of_shots_taken: Coords[] = []
+    coordinates_of_shots_taken: Coordinates[] = []
     turn: boolean = false
 
     constructor(
@@ -11,8 +11,8 @@ export class Player {
         readonly country_name: string
     ) {}
 
-    take_shot(shot: Coords): void {
+    take_shot(shot: Coordinates): void {
         this.number_of_shots_taken++
-        this.coords_of_shots_taken.push(shot)
+        this.coordinates_of_shots_taken.push(shot)
     }
 }

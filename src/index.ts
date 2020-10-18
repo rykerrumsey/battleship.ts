@@ -1,7 +1,9 @@
 import fs from "fs"
 import * as blessed from "blessed"
 import { Player } from "./player"
-import { Orientation } from "./types"
+import { Color, Orientation, ShipType } from "./types"
+import Board from "./board"
+import Ship from "./ship"
 
 let default_style = {
     bg: "white",
@@ -16,9 +18,9 @@ let inverse_default_style = {
     bg: "black"
 }
 
-let screen = blessed.screen({
+export const screen = blessed.screen({
     smartCSR: true,
-    autoPadding: true    
+    autoPadding: true
 })
 
 let background = blessed.box({
@@ -45,90 +47,11 @@ let game_screen = blessed.box({
 })
 
 // board_component
-let board = blessed.box({
-    parent: game_screen,
-    width: 16,
-    height: 8,
-    clickable: true,
-    style: {
-        fg: "blue",
-        bg: "blue",
-    },
-    top: "center",
-    left: "center",
-    shadow: true
-})
+let cruiser_ship = new Ship(ShipType.Cruiser)
+let board_element = new Board(Color.Blue, {width: 16, height: 8}, game_screen)
 
-let ship = blessed.box({
-    parent: board,
-    width: 3,
-    height: 1,
-    hidden: true,
-    style: {
-        bg: "black"
-    }
-})
-
-let orientation = Orientation.Horizontal
-
-board.on("mousemove", (data) => {
-    board.children = []
-
-    ship.top = data.y - Number(board.atop)
-    ship.left = data.x - Number(board.aleft)
-
-    if(orientation === Orientation.Horizontal) {
-        if(ship.left < Number(board.width) - 2) {
-            board.append(ship)
-        } else {
-            ship.left = Number(board.width) - 3
-            board.append(ship)
-        }
-    } else {
-        if(ship.top < Number(board.height) - 2){
-            board.append(ship)
-        } else {
-            ship.top = Number(board.height) - 3
-            board.append(ship)
-        }
-    }
-
-    ship.hidden = false
-
-    screen.render()
-})
-
-const toggle_orientation = (): void => {
-    switch(orientation) {
-        case Orientation.Vertical:
-            orientation = Orientation.Horizontal
-            ship.width = 3
-            ship.height = 1
-            break
-        case Orientation.Horizontal:
-            orientation = Orientation.Vertical
-            ship.width = 1
-            ship.height = 3
-            break
-        default:
-            return        
-    }
-
-    screen.render()
-}
-
-board.on("click", (data) => {
-    if(data.button === "middle")
-        toggle_orientation()
-    else
-        console.log(data)
-    
-})
-
-board.on("mouseout", (data) => {
-        board.children = []
-        screen.render()
-})
+board_element.position_coordinate = {x: "center", y: "center"}
+board_element.place_ship(cruiser_ship, screen)
 
 //countdown_message
 let countdown_message = blessed.box({

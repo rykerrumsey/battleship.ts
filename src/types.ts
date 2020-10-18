@@ -1,3 +1,10 @@
+export enum Color {
+    Blue = "blue",
+    Red = "red",
+    White = "white",
+    Black = "black"
+}
+
 export enum Orientation {
     Vertical,
     Horizontal
@@ -11,12 +18,17 @@ export enum ShipType {
     Destroyer = 2
 }
 
-export interface Coords {
-    x: number, 
-    y: number
+export interface Coordinates {
+    x: number | string, 
+    y: number | string
+}
+
+export interface Dimensions {
+    width: number,
+    height: number
 }
 
 export interface Shot {
-    position: Coords,
+    position: Coordinates,
     hit: boolean
 }
