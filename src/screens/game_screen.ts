@@ -7,7 +7,7 @@ export const render_game_screen = (width: number, height: number): blessed.Widge
         left: "center",
         width,
         height,
-        border: "line",
+        // border: "line",
         padding: {
             left: 2,
             right: 2,

@@ -3,8 +3,10 @@ import { Color, Dimensions, ShipType } from "../types"
 import { render_background } from "../screens/background"
 import { render_game_screen } from "../screens/game_screen"
 import SplashScreen from "../screens/splash_screen"
+import BattleScreen from "../screens/battle_screen"
 import { render_countdown } from "../screens/countdown_screen"
 import Player from "./player"
+import { clear } from "console"
 
 const GAME_WIDTH = 86
 const GAME_HEIGHT = 28
@@ -49,9 +51,10 @@ export default class Game {
     }
 
     play() {
+        this.clear_game_screen()
+
         const splash_screen = new SplashScreen()
         splash_screen.render(this.game_screen, this.screen, this.get_selected_option.bind(this))
-        //this.place_player1_ships(this.player1)
 
         this.screen.render()
 
@@ -63,20 +66,58 @@ export default class Game {
     }
 
     place_player1_ships(player: Player) {
+        player.board.is_picking = true
+        player.board.position_coordinate.x = 32
+        player.board.position_coordinate.y = 16
         player.board.render(this.game_screen, player)
         player.board.place_ship(this.screen, () => this.start_countdown(this.player2, 1))
         this.screen.render()
     }
 
     place_player2_ships(player: Player) {
+        player.board.is_picking = true
+        player.board.position_coordinate.x = 32
+        player.board.position_coordinate.y = 16
         player.board.render(this.game_screen, player)
         player.board.place_ship(this.screen, () => this.battle())
+        player.board.active = true
         this.screen.render()
     }
 
     battle() {
         this.clear_game_screen()
-        console.log("BATTLE")
+        
+        const battle_screen: BattleScreen = new BattleScreen(this.player1, this.player2)
+        let current_turn = 1
+
+        battle_screen.render(this.game_screen, this.screen, current_turn)
+        this.screen.render()
+
+        // let gameover: boolean = false
+        // let winner: Player
+
+        // while(!gameover) {
+        //     this.player1.take_shot(this.player2)
+            
+        //     if (this.player2.is_sunk) {
+        //         gameover = true
+        //         winner = this.player1
+        //     }
+
+        //     this.player2.take_shot(this.player1)
+
+        //     if(this.player1.is_sunk) {
+        //         gameover = true
+        //         winner = this.player2
+        //     }
+        //      current_turn++
+        // }
+
+        let t = setInterval(() => {
+            this.play()
+            // render_victory(winner)
+            clearInterval(t)
+        }, 3000)
     }
 
     clear_game_screen() {

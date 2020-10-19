@@ -9,7 +9,7 @@ describe("Player Class", () => {
     const parent = blessed.box({parent: screen})
 
     beforeEach(() => {
-        player = new Player(1, Color.Blue, "USA", board_dimensions, parent)
+        player = new Player(1, Color.Blue, "USA", board_dimensions)
     })
 
     test("should initialize Player 1 as USA with the color BLUE", () => {

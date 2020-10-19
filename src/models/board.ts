@@ -4,11 +4,14 @@ import { load_asset } from "../utils"
 
 import Ship from "./ship"
 import Player from "./player"
+import { default_style } from "../styles";
 
 export default class Board {
     ship_targets: Coordinates[] = []
     board_widget: blessed.Widgets.BoxElement = blessed.box({})
+    board_label: blessed.Widgets.BoxElement = blessed.box({})
     active: boolean = true
+    is_picking: boolean = false
     position_coordinate: Coordinates = {x: 32, y: 14}
     ships_availible: Ship[] = [
         new Ship(ShipType.Cruiser)
@@ -25,29 +28,38 @@ export default class Board {
 
     render(parent: blessed.Widgets.BoxElement, player: Player) {
         const instructions = load_asset("assets/instructions.txt")
+        let left: string | number = 33
 
-        blessed.box({
-            parent,
-            top: 1,
-            left: "center",
-            width: 65,
-            height: 10,
-            content: instructions,
-            style: {
-                bg: Color.White
+        if(this.is_picking) {
+            blessed.box({
+                parent,
+                top: 1,
+                left: "center",
+                width: 65,
+                height: 10,
+                content: instructions,
+                style: {
+                    bg: Color.White
+                }
+            })
+        } else {
+            if(player.id === 1) {
+                left = 15
+            } else {
+                left = 50
             }
-        })
+        }
 
-        blessed.box({
+        this.board_label = blessed.box({
             parent,
-            top: 12,
-            left: "center",
+            top: Number(this.position_coordinate.y) - 2,
+            left,
             align: "center",
             style: {
                 fg: player.color,
-                bg: Color.White
+                bg: Color.White,
             },
-            width: 20,
+            width: "shrink",
             height: 1,
             content: `Player ${player.id} - ${player.country_name}`
         })

@@ -1,5 +1,4 @@
 import * as blessed from "blessed"
-import { callbackify } from "util"
 import { default_style, inverse_default_style } from "../styles"
 import { load_asset } from "../utils"
 
@@ -28,7 +27,7 @@ export default class SplashScreen {
             height: 2,
             mouse: true,
             keys: true,
-            bottom: 0,
+            bottom: 1,
             left: "center",
             align: "center",
             style: {
