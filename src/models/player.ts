@@ -1,6 +1,6 @@
 import { Coordinates } from "../types"
 
-export class Player {
+export default class Player {
     number_of_shots_taken: number = 0
     coordinates_of_shots_taken: Coordinates[] = []
     turn: boolean = false

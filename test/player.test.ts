@@ -1,4 +1,4 @@
-import { Player } from "../src/models/player"
+import Player from "../src/models/player"
 import { Coordinates } from "../src/types"
 
 describe("Player Class", () => {
