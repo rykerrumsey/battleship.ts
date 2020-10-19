@@ -1,16 +1,20 @@
+import * as blessed from "blessed"
 import Player from "../src/models/player"
-import { Coordinates } from "../src/types"
+import { Color, Coordinates, Dimensions } from "../src/types"
 
 describe("Player Class", () => {
     let player: Player
+    let board_dimensions: Dimensions = { width: 16, height: 8}
+    const screen = blessed.screen({})
+    const parent = blessed.box({parent: screen})
 
     beforeEach(() => {
-        player = new Player(1, "BLUE", "USA")
+        player = new Player(1, Color.Blue, "USA", board_dimensions, parent)
     })
 
     test("should initialize Player 1 as USA with the color BLUE", () => {
         expect(player.id).toBe(1)
-        expect(player.color).toBe("BLUE")
+        expect(player.color).toBe("blue")
         expect(player.country_name).toBe("USA")
         expect(player.number_of_shots_taken).toBe(0)
         expect(player.coordinates_of_shots_taken).toHaveLength(0)

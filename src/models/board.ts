@@ -1,6 +1,5 @@
 import * as blessed from "blessed"
-
-import { Color, Coordinates, Dimensions } from "../types";
+import { Color, Coordinates, Dimensions, ShipType } from "../types";
 import Ship from "./ship"
 
 export default class Board {
@@ -9,6 +8,13 @@ export default class Board {
 
     active: boolean = true
     position_coordinate: Coordinates = { x: 0, y: 0 }
+    ships_availible: Ship[] = [
+        new Ship(ShipType.Cruiser),
+        new Ship(ShipType.Carrier),
+        new Ship(ShipType.Submarine),
+        new Ship(ShipType.Destroyer),
+        new Ship(ShipType.Battleship)
+    ]
    
     constructor(
         readonly color: Color,
@@ -30,15 +36,14 @@ export default class Board {
         })
     }
 
-    place_ship(ship: Ship, screen: any) {
+    place_ship(screen: any) {
         this._board_widget.on("mousemove", (data) => {
             this._board_widget.children = []
 
             const board_position = { x: this._board_widget.aleft, y: this._board_widget.atop }
             const mouse_position = { x: data.x, y: data.y }
             
-            this._board_widget.append(ship.draw(mouse_position, board_position, this.dimensions))
-            
+            this._board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
             screen.render()
         })
 
@@ -47,8 +52,8 @@ export default class Board {
             const mouse_position = { x: data.x, y: data.y }
 
             if(data.button === "middle") {
-                ship.toggle_orientation()
-                this._board_widget.append(ship.draw(mouse_position, board_position, this.dimensions))
+                this.ships_availible[0].toggle_orientation()
+                this._board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
                 screen.render()
             } else {
                 console.log(data)

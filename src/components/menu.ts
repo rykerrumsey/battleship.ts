@@ -1,10 +1,9 @@
 import * as blessed from "blessed"
 import { default_style, inverse_default_style } from "../styles"
 
-export const menu = () => {
+export const render_menu = () => {
     return blessed.list({
         width: 26,
-        hidden: true,
         height: 2,
         mouse: true,
         keys: true,
