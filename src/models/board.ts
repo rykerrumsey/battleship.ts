@@ -3,17 +3,16 @@ import { Color, Coordinates, Dimensions, ShipType } from "../types";
 import Ship from "./ship"
 
 export default class Board {
-    _ships: Ship[] = []
-    _board_widget: blessed.Widgets.BoxElement = blessed.box({})
-
+    ship_targets: Coordinates[] = []
+    board_widget: blessed.Widgets.BoxElement = blessed.box({})
     active: boolean = true
     position_coordinate: Coordinates = { x: 0, y: 0 }
     ships_availible: Ship[] = [
-        new Ship(ShipType.Cruiser),
-        new Ship(ShipType.Carrier),
-        new Ship(ShipType.Submarine),
-        new Ship(ShipType.Destroyer),
-        new Ship(ShipType.Battleship)
+        new Ship(ShipType.Cruiser)
+        // new Ship(ShipType.Carrier),
+        // new Ship(ShipType.Submarine),
+        // new Ship(ShipType.Destroyer),
+        // new Ship(ShipType.Battleship)
     ]
    
     constructor(
@@ -22,11 +21,11 @@ export default class Board {
     ) {}
 
     render(parent: blessed.Widgets.BoxElement) {
-        this._board_widget = blessed.box({
+        this.board_widget = blessed.box({
             parent,
             width: this.dimensions.width,
             height: this.dimensions.height,
-            clickable: true,
+            clickable: this.active,
             style: {
                 fg: Color.Black,
                 bg: this.color
@@ -37,33 +36,41 @@ export default class Board {
         })
     }
 
-    place_ship(screen: any) {
-        this._board_widget.on("mousemove", (data) => {
-            this._board_widget.children = []
+    place_ship(screen: blessed.Widgets.Screen, callback: () => void) {
+        this.board_widget.on("mousemove", (data) => {
+            this.board_widget.children = []
 
-            const board_position = { x: this._board_widget.aleft, y: this._board_widget.atop }
+            const board_position = { x: this.board_widget.aleft, y: this.board_widget.atop }
             const mouse_position = { x: data.x, y: data.y }
             
-            this._board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
+            this.board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
             screen.render()
         })
 
-        this._board_widget.on("click", (data) => {
-            const board_position = { x: this._board_widget.aleft, y: this._board_widget.atop }
+        this.board_widget.on("click", (data) => {
+            const board_position = { x: this.board_widget.aleft, y: this.board_widget.atop }
             const mouse_position = { x: data.x, y: data.y }
 
             if(data.button === "middle") {
                 this.ships_availible[0].toggle_orientation()
-                this._board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
+                this.board_widget.append(this.ships_availible[0].draw(mouse_position, board_position, this.dimensions))
                 screen.render()
             } else {
-                console.log(data)
-                // add ship to board
+                const ship_start_coordinate = { x: data.x - Number(board_position.x), y: data.y - Number(board_position.y)}
+                const local_ship_coordinates = this.ships_availible[0].calculate_ship_section_coordinates(ship_start_coordinate)
+                
+                this.ship_targets.push(...local_ship_coordinates)
+
+                this.active = false
+
+                this.board_widget.destroy()
+
+                callback()
             }
         })
         
-        this._board_widget.on("mouseout", () => {
-            this._board_widget.children = []
+        this.board_widget.on("mouseout", () => {
+            this.board_widget.children = []
             screen.render()
         })
     }

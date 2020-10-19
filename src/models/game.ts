@@ -47,7 +47,7 @@ export default class Game {
     
     get_selected_option(): void {
         this.clear_game_screen()
-        this.start_countdown(this.player2)
+        this.start_countdown(this.player1, 2)
     }
 
     play() {
@@ -66,8 +66,20 @@ export default class Game {
     place_player1_ships(player: Player) {
         player.board.position_coordinate = {x: "center", y: "center"}
         player.board.render(this.game_screen)
-        player.board.place_ship(this.screen)
+        player.board.place_ship(this.screen, () => this.start_countdown(this.player2, 1))
         this.screen.render()
+    }
+
+    place_player2_ships(player: Player) {
+        player.board.position_coordinate = {x: "center", y: "center"}
+        player.board.render(this.game_screen)
+        player.board.place_ship(this.screen, () => this.battle())
+        this.screen.render()
+    }
+
+    battle() {
+        this.clear_game_screen()
+        console.log("BATTLE")
     }
 
     clear_game_screen() {
@@ -75,8 +87,8 @@ export default class Game {
         this.screen.render()
     }
 
-    start_countdown(player: Player) {
-        const countdown_screen = render_countdown(2)
+    start_countdown(player: Player, other_player_id: number): void {
+        const countdown_screen = render_countdown(other_player_id)
         this.game_screen.append(countdown_screen)
 
         let countdown_value = 5
@@ -86,7 +98,10 @@ export default class Game {
             if(countdown_value <= 1) {
                 clearInterval(t)
                 countdown_screen.destroy()
-                this.place_player1_ships(this.player1)
+                if(player.id === 1)
+                    this.place_player1_ships(player)
+                else
+                    this.place_player2_ships(player)
             }
             countdown_value--
             countdown_screen.setLine(2, countdown_value.toString())
