@@ -2,7 +2,7 @@ import * as blessed from "blessed"
 import { Color, Dimensions, ShipType } from "../types"
 import { render_background } from "../screens/background"
 import { render_game_screen } from "../screens/game_screen"
-import { render_splash_screen } from "../screens/splash_screen"
+import SplashScreen from "../screens/splash_screen"
 import { render_countdown } from "../screens/countdown_screen"
 import Player from "./player"
 
@@ -12,7 +12,7 @@ const PLAYER_ONE_COUNTRY = "USA"
 const PLAYER_ONE_COLOR = Color.Blue
 const PLAYER_TWO_COUNTRY = "USSR"
 const PLAYER_TWO_COLOR = Color.Red
-const SPLASH_PATH = "assets/splash_screen.txt"
+
 const BOARD_WIDTH = 16
 const BOARD_HEIGHT = 8
 
@@ -24,6 +24,7 @@ export default class Game {
     private board_dimensions: Dimensions = { width: BOARD_WIDTH, height: BOARD_HEIGHT}
     private player1: Player
     private player2: Player
+    private selected: boolean = false
 
     constructor() {
         this.screen = blessed.screen({
@@ -35,8 +36,8 @@ export default class Game {
         
         this.game_screen = render_game_screen(GAME_WIDTH, GAME_HEIGHT)
         
-        this.player1 = new Player(1, PLAYER_ONE_COLOR, PLAYER_ONE_COUNTRY, this.board_dimensions) //, this.game_screen)
-        this.player2 = new Player(2, PLAYER_TWO_COLOR, PLAYER_TWO_COUNTRY, this.board_dimensions) //, this.game_screen)
+        this.player1 = new Player(1, PLAYER_ONE_COLOR, PLAYER_ONE_COUNTRY, this.board_dimensions)
+        this.player2 = new Player(2, PLAYER_TWO_COLOR, PLAYER_TWO_COUNTRY, this.board_dimensions)
 
         const background = render_background(this.width, this.height)
 
@@ -44,15 +45,33 @@ export default class Game {
         background.append(this.game_screen)
     }
     
+    get_selected_option(): void {
+        this.clear_game_screen()
+        this.start_countdown(this.player2)
+    }
+
     play() {
-        render_splash_screen(SPLASH_PATH, this.game_screen, this.screen, () => this.start_countdown(this.player2))    
+        const splash_screen = new SplashScreen()
+        splash_screen.render(this.game_screen, this.screen, this.get_selected_option.bind(this))
+
+        this.screen.render()
 
         this.screen.on("keypress", (_, key) => {
             if(key.name === "q") {
                 this.screen.destroy()
             }
         })        
+    }
 
+    place_player1_ships(player: Player) {
+        player.board.position_coordinate = {x: "center", y: "center"}
+        player.board.render(this.game_screen)
+        player.board.place_ship(this.screen)
+        this.screen.render()
+    }
+
+    clear_game_screen() {
+        this.game_screen.children = []
         this.screen.render()
     }
 
@@ -67,7 +86,7 @@ export default class Game {
             if(countdown_value <= 1) {
                 clearInterval(t)
                 countdown_screen.destroy()
-                this.player1.show_picker(this.screen)
+                this.place_player1_ships(this.player1)
             }
             countdown_value--
             countdown_screen.setLine(2, countdown_value.toString())

@@ -4,7 +4,7 @@ import Ship from "./ship"
 
 export default class Board {
     _ships: Ship[] = []
-    _board_widget: blessed.Widgets.BoxElement
+    _board_widget: blessed.Widgets.BoxElement = blessed.box({})
 
     active: boolean = true
     position_coordinate: Coordinates = { x: 0, y: 0 }
@@ -18,17 +18,18 @@ export default class Board {
    
     constructor(
         readonly color: Color,
-        readonly dimensions: Dimensions,
-        readonly parent: blessed.Widgets.BoxElement,
-    ) {
+        readonly dimensions: Dimensions
+    ) {}
+
+    render(parent: blessed.Widgets.BoxElement) {
         this._board_widget = blessed.box({
-            parent: parent,
-            width: dimensions.width,
-            height: dimensions.height,
+            parent,
+            width: this.dimensions.width,
+            height: this.dimensions.height,
             clickable: true,
             style: {
                 fg: Color.Black,
-                bg: color
+                bg: this.color
             },
             top: this.position_coordinate.y,
             left: this.position_coordinate.x,
@@ -65,9 +66,5 @@ export default class Board {
             this._board_widget.children = []
             screen.render()
         })
-    }
-
-    draw() {
-        return this._board_widget
     }
 }

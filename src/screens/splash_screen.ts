@@ -1,50 +1,59 @@
 import * as blessed from "blessed"
+import { callbackify } from "util"
+import { default_style, inverse_default_style } from "../styles"
 import { load_asset } from "../utils"
-import { render_menu } from "../components/menu"
 
-export const splash_screen = (
-    splash_path: string, 
-    parent: blessed.Widgets.BoxElement, 
-    screen: blessed.Widgets.Screen,
-    callback: () => void): blessed.Widgets.BoxElement => {
-    
-    const data = load_asset(splash_path)
+const SPLASH_PATH = "assets/splash_screen.txt"
 
-    const splash = blessed.box({
-        parent,
-        bg: "white",
-        fg: "black",
-        content: data,
-        top: 0,
-        left: "center",
-        width: 78,
-        height: 24
-    })
+export default class SplashScreen {
+    splash_data: string = load_asset(SPLASH_PATH)
 
-    const menu = render_menu()
+    constructor() {}
 
-    let text: string = ""
+    render(parent: blessed.Widgets.BoxElement, screen: blessed.Widgets.Screen, notify_select: () => void) {
+        const splash = blessed.box({
+            parent,
+            bg: "white",
+            fg: "black",
+            content: this.splash_data,
+            top: 0,
+            left: "center",
+            width: 78,
+            height: 24
+        })
 
-    menu.focus()
-    menu.select(0)
+        const menu = blessed.list({
+            parent,
+            width: 26,
+            height: 2,
+            mouse: true,
+            keys: true,
+            bottom: 0,
+            left: "center",
+            align: "center",
+            style: {
+                selected: inverse_default_style,
+                item: default_style
+            },
+            items: ["NEW GAME", "QUIT"]
+        })
 
-    menu.on("select", (item, key) => {
-        text = item.getText()
-    })
+        let text: string = ""
 
-    menu.on("keypress", (_, key) => {
-        if(key.name === "enter") {
-            if(text === "QUIT") {
-                screen.destroy()
-            } else {
-                parent.children = []
-                screen.render()
-                callback()
+        menu.focus()
+        menu.select(0)
+
+        menu.on("select", (item, key) => {
+            text = item.getText()
+        })
+
+        menu.on("keypress", (_, key) => {
+            if(key.name === "enter") {
+                if(text === "QUIT")
+                    screen.destroy()
+                else
+                    notify_select()
             }
-        }
-    })
-
-    splash.append(menu)
-
-    return splash
+        })
+    }
 }

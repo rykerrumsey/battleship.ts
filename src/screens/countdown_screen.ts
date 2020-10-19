@@ -1,6 +1,5 @@
 import * as blessed from "blessed"
 import { default_style } from "../styles"
-import Player from "../models/player"
 
 export const render_countdown = (player_id: number) => {
     let countdown_message = blessed.box({
