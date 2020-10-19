@@ -1,5 +1,6 @@
 import * as blessed from "blessed"
 import { default_style } from "../styles"
+import { Color } from "../types"
 
 export const render_countdown = (player_id: number) => {
     let countdown_message = blessed.box({
@@ -10,7 +11,13 @@ export const render_countdown = (player_id: number) => {
         top: "center",
         left: "center",
         align: "center",
-        style: default_style
+        style: {
+            ...default_style,
+            border: {
+                bg: Color.White,
+                fg: Color.Black
+            }
+        }
     })
 
     const message = `Close your eyes Player ${player_id} ...`

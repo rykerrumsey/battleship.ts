@@ -39,7 +39,8 @@ export default class Board {
                 height: 10,
                 content: instructions,
                 style: {
-                    bg: Color.White
+                    bg: Color.White,
+                    fg: Color.Black
                 }
             })
         } else {
