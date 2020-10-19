@@ -1,12 +1,15 @@
 import * as blessed from "blessed"
 import { Color, Coordinates, Dimensions, ShipType } from "../types";
+import { load_asset } from "../utils"
+
 import Ship from "./ship"
+import Player from "./player"
 
 export default class Board {
     ship_targets: Coordinates[] = []
     board_widget: blessed.Widgets.BoxElement = blessed.box({})
     active: boolean = true
-    position_coordinate: Coordinates = { x: 0, y: 0 }
+    position_coordinate: Coordinates = {x: 32, y: 14}
     ships_availible: Ship[] = [
         new Ship(ShipType.Cruiser)
         // new Ship(ShipType.Carrier),
@@ -20,7 +23,35 @@ export default class Board {
         readonly dimensions: Dimensions
     ) {}
 
-    render(parent: blessed.Widgets.BoxElement) {
+    render(parent: blessed.Widgets.BoxElement, player: Player) {
+        const instructions = load_asset("assets/instructions.txt")
+
+        blessed.box({
+            parent,
+            top: 1,
+            left: "center",
+            width: 65,
+            height: 10,
+            content: instructions,
+            style: {
+                bg: Color.White
+            }
+        })
+
+        blessed.box({
+            parent,
+            top: 12,
+            left: "center",
+            align: "center",
+            style: {
+                fg: player.color,
+                bg: Color.White
+            },
+            width: 20,
+            height: 1,
+            content: `Player ${player.id} - ${player.country_name}`
+        })
+
         this.board_widget = blessed.box({
             parent,
             width: this.dimensions.width,

@@ -12,7 +12,6 @@ const PLAYER_ONE_COUNTRY = "USA"
 const PLAYER_ONE_COLOR = Color.Blue
 const PLAYER_TWO_COUNTRY = "USSR"
 const PLAYER_TWO_COLOR = Color.Red
-
 const BOARD_WIDTH = 16
 const BOARD_HEIGHT = 8
 
@@ -24,7 +23,6 @@ export default class Game {
     private board_dimensions: Dimensions = { width: BOARD_WIDTH, height: BOARD_HEIGHT}
     private player1: Player
     private player2: Player
-    private selected: boolean = false
 
     constructor() {
         this.screen = blessed.screen({
@@ -53,6 +51,7 @@ export default class Game {
     play() {
         const splash_screen = new SplashScreen()
         splash_screen.render(this.game_screen, this.screen, this.get_selected_option.bind(this))
+        //this.place_player1_ships(this.player1)
 
         this.screen.render()
 
@@ -64,15 +63,13 @@ export default class Game {
     }
 
     place_player1_ships(player: Player) {
-        player.board.position_coordinate = {x: "center", y: "center"}
-        player.board.render(this.game_screen)
+        player.board.render(this.game_screen, player)
         player.board.place_ship(this.screen, () => this.start_countdown(this.player2, 1))
         this.screen.render()
     }
 
     place_player2_ships(player: Player) {
-        player.board.position_coordinate = {x: "center", y: "center"}
-        player.board.render(this.game_screen)
+        player.board.render(this.game_screen, player)
         player.board.place_ship(this.screen, () => this.battle())
         this.screen.render()
     }
@@ -88,6 +85,7 @@ export default class Game {
     }
 
     start_countdown(player: Player, other_player_id: number): void {
+        this.clear_game_screen()
         const countdown_screen = render_countdown(other_player_id)
         this.game_screen.append(countdown_screen)
 

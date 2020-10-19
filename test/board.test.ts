@@ -20,6 +20,6 @@ describe("Board Class", () => {
         expect(board.dimensions).toStrictEqual({ width: 8, height: 8 })
         expect(board.color).toBe(Color.Red)
         expect(board.ship_targets).toHaveLength(0)
-        expect(board.position_coordinate).toStrictEqual({ x: 0, y: 0 })
+        expect(board.position_coordinate).toStrictEqual({ x: 32, y: 14 })
     })
 })
